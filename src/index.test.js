@@ -51,13 +51,12 @@ test('Success - re-Zip - Change Content', async done => {
     newContent.push(null);
 
     const editor = await zipEditor(zipFilePath, {
-        onEntryCallback: ({path}) => path === 'content1.txt',
-        onStreamCallback: ({path}) => ({content: newContent, path}),
+        onStreamCallback: ({path, content}) => ({content: path === 'content1.txt' ? newContent : content, path}),
     });
 
     editor.pipe(
         new BufferList(function(err, data) {
-            expect(data.length).toBe(153);
+            expect(data.length).toBe(409);
             expect(data).toMatchSnapshot();
             done();
         })
